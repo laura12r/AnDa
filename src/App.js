@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Home from './components/home.jsx';
-import Login from './components/login.js'
+import Login from './views/loginPage.jsx'
 
 // import './App.css';
 
@@ -15,7 +15,7 @@ function App() {
         <Route exact path='/'>
           <Home />
         </Route>
-        <Route path='/login'>
+        <Route path='/dashboard'>
           <Login />
         </Route>
       </Switch>

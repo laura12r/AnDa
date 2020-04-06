@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppBar() {
+function AppBar({ dispatch, isLogged }) {
   const classes = useStyles();
 
   return (
@@ -28,8 +29,8 @@ function AppBar() {
           <Typography variant="h6" className={classes.title}>
             AnDa
           </Typography>
-          <Link to='/login' style={{color: '#fefefe', textDecoration: 'none'}} >
-            <Button color="inherit">Login</Button>
+          <Link to='/dashboard' style={{color: '#fefefe', textDecoration: 'none'}} >
+            <Button color="inherit">{isLogged ? 'Dashboard': 'Login'} </Button>
           </Link>
         </Toolbar>
       </MuiAppBar>
@@ -37,4 +38,7 @@ function AppBar() {
   );
 }
 
-export default AppBar;
+const mapStateToProps = state => ({
+  isLogged: state.Client.isLogged,
+})
+export default connect(mapStateToProps)(AppBar);

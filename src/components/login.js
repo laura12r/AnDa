@@ -1,25 +1,30 @@
 import React, { Fragment, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles';
 
 // firebase
-import { auth } from '../firebase.app';
+import { auth, googleProvider } from '../firebase.app';
 // views
 import LoginUI from '../views/login';
 import SignInUI from '../views/signin';
 
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    margin: '0 6rem',
+  },
+}));
+
 function Login({ dispatch, isLogged }) {
-  
-  const [ isRegister, setIsRegister ] = useState(false);
+  const classes = useStyles();
+  const [isRegister, setIsRegister] = useState(false);
   const formRef = useRef({});
 
   const signin = (event) => {
     event.preventDefault();
     const dataForm = new FormData(formRef.current);
-    const [ firstName, lastName, email, password ] = dataForm.values();
-    
+    const [firstName, lastName, email, password] = dataForm.values();
+
     console.log('_firstName: ', firstName);
     console.log('_lastName: ', lastName);
 
@@ -28,21 +33,23 @@ function Login({ dispatch, isLogged }) {
         if (client.user !== undefined) {
           console.log('usuario registrado');
           setIsRegister(false);
+
         }
       })
       .catch((err) => console.dir(err));
 
     event.currentTarget.reset();
   }
-  
-  const login = (event) => { 
+
+  const login = (event) => {
     event.preventDefault();
     const dataForm = new FormData(formRef.current);
-    const [ email, password ] = dataForm.values();
+    const [email, password] = dataForm.values();
 
     auth.signInWithEmailAndPassword(email, password)
       .then((client) => {
         console.dir(client);
+        localStorage.setItem('is_logged', auth.currentUser !== null ? true : false)
         dispatch({
           type: 'IS_LOGGED',
           payload: { isLogged: auth.currentUser !== null && true }
@@ -58,28 +65,29 @@ function Login({ dispatch, isLogged }) {
     setIsRegister(true);
   }
 
-  const onCloseSession = () => {
-    auth.signOut();
-    dispatch({
-      type: 'IS_LOGGED',
-      payload: { isLogged: false }
-    })
+  const onHandleClickGoogleAuth = (event) => {
+    event.preventDefault();
+    // Using a popup.
+    googleProvider.addScope('profile');
+    googleProvider.addScope('email');
+    auth.signInWithPopup(googleProvider).then(function (result) {
+      // This gives you a Google Access Token.
+      let token = result.credential.accessToken;
+      // The signed-in user info.
+      let user = result.user;
+      console.log(token, user)
+    });
   }
 
-  
+
+
+
   return (
     <Fragment>
-      <Link to="/">Back to Home AnDa</Link>
-      <section>
-        <div>
-          <p>Esto le toca a Laura ...</p>
-        </div>
-        <form ref={formRef} onSubmit={ isRegister ? signin : login }>
-          { isRegister ? <h3>Registrarse</h3> : <h3>Iniciar sesión</h3> }
-          { isRegister ? (<SignInUI />) : (<LoginUI onClickHandle={onHandleClickRegister} />) }
-        </form>
-      </section>
-      { isLogged ? <Button variant="contained" color="secondary" onClick={onCloseSession}>logout</Button> : null }
+      <form ref={formRef} className={classes.form} onSubmit={isRegister ? signin : login}>
+        {isRegister ? <h3>Registrarse</h3> : <h3>Iniciar sesión</h3>}
+        {isRegister ? (<SignInUI />) : (<LoginUI onClickHandleGoogle={onHandleClickGoogleAuth} onClickHandle={onHandleClickRegister} />)}
+      </form>
     </Fragment>
   )
 }

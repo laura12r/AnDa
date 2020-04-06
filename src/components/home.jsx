@@ -1,13 +1,14 @@
 import React, { Fragment } from 'react';
+import AppBar from './appbar.jsx';
 
-import AppBar from './appbar.jsx'
 
 function Home() {
     return (
         <Fragment>
-            <AppBar />
+             <AppBar/> 
         </Fragment>
     )
 };
+
 
 export default Home;

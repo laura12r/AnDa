@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-    isLogged: false,
+    isLogged: localStorage.getItem('is_logged') === 'true' ? true : false,
 };
 
 export default (state = INITIAL_STATE, action) => {

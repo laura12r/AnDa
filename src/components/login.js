@@ -8,7 +8,6 @@ import { auth, googleProvider } from '../firebase.app';
 import LoginUI from '../views/login';
 import SignInUI from '../views/signin';
 
-
 const useStyles = makeStyles((theme) => ({
   form: {
     margin: '0 6rem',
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({ dispatch, isLogged }) {
   const classes = useStyles();
-  const [isRegister, setIsRegister] = useState(false);
+  const [ isRegister, setIsRegister ] = useState(false);
   const formRef = useRef({});
 
   const signin = (event) => {
@@ -70,17 +69,24 @@ function Login({ dispatch, isLogged }) {
     // Using a popup.
     googleProvider.addScope('profile');
     googleProvider.addScope('email');
-    auth.signInWithPopup(googleProvider).then(function (result) {
-      // This gives you a Google Access Token.
-      let token = result.credential.accessToken;
-      // The signed-in user info.
-      let user = result.user;
-      console.log(token, user)
-    });
+    auth.signInWithPopup(googleProvider)
+      .then(function (result) {
+        // This gives you a Google Access Token.
+        let token = result.credential.accessToken;
+        // The signed-in user info.
+        let user = result.user;
+        console.log(token, user);
+
+        localStorage.setItem('is_logged', user.uid !== null ? true : false)
+        dispatch({
+          type: 'IS_LOGGED',
+          payload: { isLogged: user.uid !== null && true }
+        });
+      })
+      .catch(function(err) {
+        console.dir(err);
+      });
   }
-
-
-
 
   return (
     <Fragment>

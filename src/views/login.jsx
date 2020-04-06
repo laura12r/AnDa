@@ -74,8 +74,6 @@ function LoginUI({ onClickHandle, onClickHandleGoogle }) {
 
       <hr></hr>
 
-
-
       <Button
         variant="contained"
         color="default"

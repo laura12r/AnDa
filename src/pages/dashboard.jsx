@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 
 // firebase
-import { auth } from '../firebase.app';
+import { auth, firestoreDB } from '../firebase.app';
 
 function Dashboard({ dispatch, isLogged }) {
     const onCloseSession = () => {
@@ -14,14 +14,29 @@ function Dashboard({ dispatch, isLogged }) {
             payload: { isLogged: false }
         })
     }
+
+    const db = () => {
+        firestoreDB.collection('usuarios').get()
+        .then((querySnapshot) => {
+            console.dir(querySnapshot);
+
+            querySnapshot.forEach((doc) => {
+                console.log(doc.id);
+                console.dir(doc.data());
+            });
+        });
+    }
+
     return (
         <div>
-            {isLogged ? <Button variant="contained" color="secondary" onClick={onCloseSession}>logout</Button> : null}
+            { isLogged ? <Button variant="contained" color="secondary" onClick={onCloseSession}>logout</Button> : null }
+            { db() }
         </div>
     )
 }
 
 const mapStateToProps = state => ({
     isLogged: state.Client.isLogged,
-})
+});
+
 export default connect(mapStateToProps)(Dashboard);

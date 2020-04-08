@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
 // firebase
-import { auth, googleProvider } from '../firebase.app';
+import { auth, googleProvider, firestoreDB } from '../firebase.app';
 // views
 import LoginUI from '../views/login';
 import SignInUI from '../views/signin';
@@ -22,7 +22,7 @@ function Login({ dispatch, isLogged }) {
   const signin = (event) => {
     event.preventDefault();
     const dataForm = new FormData(formRef.current);
-    const [firstName, lastName, email, password] = dataForm.values();
+    const [ firstName, lastName, email, password ] = dataForm.values();
 
     console.log('_firstName: ', firstName);
     console.log('_lastName: ', lastName);
@@ -30,6 +30,20 @@ function Login({ dispatch, isLogged }) {
     auth.createUserWithEmailAndPassword(email, password)
       .then((client) => {
         if (client.user !== undefined) {
+          
+          firestoreDB.collection('usuarios').add({
+              nombre: firstName,
+              apellido: lastName,
+              correo: email
+          })
+          .then(function(docRef) {
+              localStorage.setItem('uID', docRef.id);
+              console.log("Document written with ID: ", docRef.id);
+          })
+          .catch(function(error) {
+              console.error("Error adding document: ", error);
+          });
+
           console.log('usuario registrado');
           setIsRegister(false);
 

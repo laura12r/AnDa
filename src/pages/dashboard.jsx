@@ -16,15 +16,19 @@ function Dashboard({ dispatch, isLogged }) {
     }
 
     const db = () => {
-        firestoreDB.collection('usuarios').get()
-        .then((querySnapshot) => {
-            console.dir(querySnapshot);
+        // firestoreDB.collection('usuarios').get()
+        // .then((querySnapshot) => {
+        //     console.dir(querySnapshot);
 
-            querySnapshot.forEach((doc) => {
-                console.log(doc.id);
-                console.dir(doc.data());
-            });
-        });
+        //     querySnapshot.forEach((doc) => {
+        //         console.log(doc.id);
+        //         console.dir(doc.data());
+        //     });
+        // });
+
+        const docRef = firestoreDB.collection('usuarios').doc(`/${localStorage.getItem('uID')}`);
+        docRef.update({ genero: 'mujer' })
+        .catch(err => console.dir(err));
     }
 
     return (

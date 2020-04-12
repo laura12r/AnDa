@@ -23,6 +23,7 @@ function Login({ dispatch, isLogged }) {
     event.preventDefault();
     const dataForm = new FormData(formRef.current);
     const [ firstName, lastName, email, password ] = dataForm.values();
+    localStorage.setItem('email', email);
 
     console.log('_firstName: ', firstName);
     console.log('_lastName: ', lastName);
@@ -58,6 +59,7 @@ function Login({ dispatch, isLogged }) {
     event.preventDefault();
     const dataForm = new FormData(formRef.current);
     const [email, password] = dataForm.values();
+    localStorage.setItem('email', email);
 
     auth.signInWithEmailAndPassword(email, password)
       .then((client) => {
@@ -90,7 +92,7 @@ function Login({ dispatch, isLogged }) {
         // The signed-in user info.
         let user = result.user;
         console.log(token, user);
-
+        localStorage.setItem('email', user.email);
         localStorage.setItem('is_logged', user.uid !== null ? true : false)
         dispatch({
           type: 'IS_LOGGED',

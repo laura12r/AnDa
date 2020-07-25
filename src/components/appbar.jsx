@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import Logo from './logo.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  logo:{
+    width:'100%',
+    maxWidth:'150px',
+    marginTop: '10px'
+  },
 }));
 
 function AppBar({ dispatch, isLogged }) {
@@ -27,7 +33,8 @@ function AppBar({ dispatch, isLogged }) {
       <MuiAppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            AnDa
+          
+          <img src={Logo} className={classes.logo}/>
           </Typography>
           <Link to='/dashboard' style={{color: '#fefefe', textDecoration: 'none'}} >
             <Button color="inherit">{isLogged ? 'Dashboard': 'Login'} </Button>

@@ -3,7 +3,8 @@ const INITIAL_STATE = {
     isChangeLastName: false,
     isChangeEmail: false,
     isChangeGender: false,
-    isChangeDate: false
+    isChangeDate: false,
+    isChangePhone: false
 };
 
 export default (state = INITIAL_STATE, action) => {

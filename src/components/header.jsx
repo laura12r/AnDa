@@ -68,7 +68,13 @@ const useStyles = makeStyles((theme) => ({
     maxWidth:'150px',
     marginTop: '10px'
   },
+
+  
+  
 }));
+
+
+
 
 
 function Header() {
@@ -252,6 +258,7 @@ function Header() {
             </Grid>
           </Container>
         </main>
+
         {/* Footer */}
         <footer className={classes.footer}>
           <Typography variant="h6" align="center" gutterBottom>

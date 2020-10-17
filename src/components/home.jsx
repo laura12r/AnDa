@@ -10,8 +10,6 @@ function Home() {
              <AppBar/> 
              <Header/>
              <Checkout/>
-    
-
         </Fragment>
     )
 };

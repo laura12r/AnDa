@@ -10,9 +10,8 @@ function Dashboard({ dispatch, isLogged, personalInformation }) {
     const [data, setData] = useState({});
     const [uID, setUID] = useState(null);
 
-
     useEffect(() => {
-        firestoreDB.collection('usuarios').where('correo', "==", localStorage.getItem('email').toLowerCase())
+        firestoreDB.collection('usuarios').where('correo', "==", localStorage.getItem('email'))
             .get()
             .then(function (querySnapshot) {
                 querySnapshot.forEach(function (doc) {
@@ -70,6 +69,12 @@ function Dashboard({ dispatch, isLogged, personalInformation }) {
                         payload: { isChangeDate: true }
                     })
                     break;
+                case 'phone':
+                    dispatch({
+                        type: 'PERSONAL_INFORMATION',
+                        payload: { isChangePhone: true }
+                    })
+                    break;
 
                 default:
                     break;
@@ -81,7 +86,7 @@ function Dashboard({ dispatch, isLogged, personalInformation }) {
         event.preventDefault();
         const dataUpdate = {};
         const dataForm = new FormData(formRef.current);
-        const [nombre, apellido, correo, gender, fecha] = dataForm.values();
+        const [ nombre, apellido, correo, gender, fecha, phone ] = dataForm.values();
 
         
             if (personalInformation.isChangeFirstName === true)
@@ -94,9 +99,10 @@ function Dashboard({ dispatch, isLogged, personalInformation }) {
                 dataUpdate.gender = gender
             if (personalInformation.isChangeDate === true)
                 dataUpdate.fecha = fecha
-
-            
-        console.log(dataUpdate)
+            if (personalInformation.isChangePhone === true)
+                dataUpdate.phone = phone
+                
+        console.log(dataUpdate);
         dispatch({
             type: 'PERSONAL_INFORMATION',
             payload: {
@@ -104,7 +110,8 @@ function Dashboard({ dispatch, isLogged, personalInformation }) {
                 isChangeLastName: false,
                 isChangeEmail: false,
                 isChangeGender: false,
-                isChangeDate: false
+                isChangeDate: false,
+                isChangePhone: false
             }
         })
 
@@ -116,19 +123,77 @@ function Dashboard({ dispatch, isLogged, personalInformation }) {
     return (
         <div>
             <form ref={formRef} onSubmit={onHandleSubmitUpdate}>
-                <label>Nombre</label>
-                <input type="text" onChange={onHandleChange} id="nombre" name="nombre" defaultValue={data.nombre && data.nombre} placeholder="nombre" />
-                <label>Apellido</label>
-                <input type="text" onChange={onHandleChange} id="apellido" name="apellido" defaultValue={data.apellido && data.apellido} placeholder="apellido" />
-                <label>Correo</label>
-                <input type="text" onChange={onHandleChange} id="correo" name="correo" defaultValue={data.correo && data.correo} placeholder="correo" />
-                <input type="radio" onChange={onHandleChange} id="male" name="gender" defaultValue="Masculino" />
-                <label htmlFor="male">Masculino</label><br />
-                <input type="radio" onChange={onHandleChange} id="female" name="gender" defaultValue="Femenino" />
-                <label htmlFor="other">Femenino</label><br />
-                <label>Fecha de nacimiento</label>
-                <input type="date" onChange={onHandleChange} id="fecha" name="fecha" />
-                <button type="submit" >Actualizar</button>
+                <div>
+                    <input
+                        type="text"
+                        onChange={onHandleChange}
+                        id="nombre"
+                        name="nombre"
+                        defaultValue={data.nombre && data.nombre}
+                        placeholder="Nombre"
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        onChange={onHandleChange}
+                        id="apellido"
+                        name="apellido"
+                        defaultValue={data.apellido && data.apellido}
+                        placeholder="Apellido"
+                    />
+                </div>
+                <div>
+                    <input
+                        type="email"
+                        onChange={onHandleChange}
+                        id="correo"
+                        name="correo"
+                        defaultValue={data.correo && data.correo}
+                        placeholder="Correo"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="male">Hombre</label>     
+                    <input
+                        type="radio"
+                        onChange={onHandleChange}
+                        id="male"
+                        name="gender"
+                        defaultValue="Masculino"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="female">Mujer</label>
+                    <input
+                        type="radio"
+                        onChange={onHandleChange}
+                        id="female"
+                        name="gender"
+                        defaultValue="Femenino"
+                    />
+                </div>
+                <div>
+                    <label>Fecha de nacimiento</label><br/>
+                    <input
+                        type="date"
+                        onChange={onHandleChange}
+                        id="fecha"
+                        name="fecha"
+                    />
+                </div>
+                <div>
+                    <input
+                        type="phone"
+                        onChange={onHandleChange}
+                        id="phone"
+                        name="phone"
+                        placeholder="Celular"
+                    />
+                </div>
+                <div>
+                    <button type="submit">Actualizar</button>
+                </div>
             </form>
             {isLogged ? <Button variant="contained" color="secondary" onClick={onCloseSession}>logout</Button> : null}
         </div>
